@@ -18,7 +18,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-@RestController
+@Controller
 public class ResultsController {
 	private final ResultsService resultsService;
 
@@ -26,31 +26,28 @@ public class ResultsController {
 	public ResultsController(ResultsService resultsService) {
 		this.resultsService = resultsService;
 	}
-	@GetMapping("/")
-	public String showLoginPage() {
-//		model.addAttribute("model",new ResultsModel("",new ArrayList<>(),""));
+	@RequestMapping("/")
+	public String showLoginPage(Model model) {
+		model.addAttribute("model",new ResultsModel("",new ArrayList<>(),""));
 		return "login";
 	}
 
-	@GetMapping("/login")
+	@RequestMapping("/login")
 	public String loginUser(@RequestParam("name") String name,
-							@RequestParam("password") String password) throws IOException, URISyntaxException, InterruptedException {
+							@RequestParam("password") String password,
+							Model model) throws IOException, URISyntaxException, InterruptedException {
 		resultsService.checkAnalysis();
 		String message= resultsService.checkAuthentication(name,password);
 		List<Electives> electives = resultsService.findAllMongo();
 		if(!resultsService.checkAnalysis()){
 			message="no results yet!";
-//			model.addAttribute("model",new ResultsModel(name,electives,message));
+			model.addAttribute("model",new ResultsModel(name,electives,message));
 			return "no results yet!";
 		}
-//		model.addAttribute("model",new ResultsModel(name,electives,message));
+		model.addAttribute("model",new ResultsModel(name,electives,message));
 		if (!message.equals("valid")){
 			return "login";
 		}
-		StringBuilder s= new StringBuilder();
-		for(Electives e:electives){
-			s.append("\n").append(e.getName()).append(": ").append(e.getVotes());
-		}
-		return s.toString();
+		return "Results";
 	}
 }

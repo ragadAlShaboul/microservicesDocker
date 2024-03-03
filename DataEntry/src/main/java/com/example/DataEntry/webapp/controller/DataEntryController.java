@@ -7,35 +7,35 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RestController;
 
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-@RestController
+@Controller
 public class DataEntryController {
 	@Autowired
 	private DataEntryService dataEntryService;
 
-	@GetMapping("/")
+	@RequestMapping("/")
 	public String showLoginPage() {
 		return "login";
 	}
 
-	@GetMapping("/login")
+	@RequestMapping("/login")
 	public String loginUser(@RequestParam("name") String name,
-							@RequestParam("password") String password
+							@RequestParam("password") String password,
+							Model model
 							) throws URISyntaxException, IOException, InterruptedException {
 		String message= dataEntryService.checkAuthentication(name,password);
-//		model.addAttribute("name",name);
+		model.addAttribute("name",name);
 		if (!message.equals("valid")){
-//			model.addAttribute("message" , message);
+			model.addAttribute("message" , message);
 			return "login";
 		}
-		return "enter data";
+		return "DataEntry";
 	}
-	@GetMapping("/submit")
+	@RequestMapping("/submit")
 	public String submitVote(@RequestParam("hidden") String name,
 							 @RequestParam("data") String data) {
 		dataEntryService.insertData(name,data);

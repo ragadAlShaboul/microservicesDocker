@@ -75,6 +75,8 @@ services:
       spring.data.mongodb.host: mongo
       spring.data.mongodb.port: 27017
       spring.data.mongodb.database: docker_mongo
+      spring.mvc.view.prefix: /WEB-INF/views/
+      spring.mvc.view.suffix: .jsp
     networks:
       - isolation-network
     depends_on:
