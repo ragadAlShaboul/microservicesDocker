@@ -1,0 +1,24 @@
+name: Deploy with Docker Compose
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Compose
+        uses: docker/compose-cli@v0.0.1
+        with:
+          compose-file: docker-compose.yml
+          compose-version: '3.9'
+
+      - name: Build and Deploy
+        run: |
+          docker-compose up -d
